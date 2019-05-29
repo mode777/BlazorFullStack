@@ -1,0 +1,50 @@
+﻿@typeparam TItem;
+@using BlazorFullStack.Shared.Framework;
+@inject MetadataService Metadata;
+
+@if(Items == null){
+    <p><em>NO DATA</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            @foreach(var property in Properties)
+            {
+                <th scope="col">@property.Name</th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach(var item in FilteredItems)
+        {
+            <tr>
+                @foreach(var property in Properties)
+                {
+                    <td>@property.GetValue(item).ToString()</td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <span>Page: @(Page + 1)</span>
+        <ul class="pagination">
+            @for (var i = 1; i <= Items.Count / (PageSize); i++)
+            {
+                var page = i - 1;
+                <li onclick="@(() => Page = page)" class="page-item"><a class="page-link">@i</a></li>
+            }
+        </ul>
+    </nav>
+}
+
+@functions {
+    
+    protected override void OnInit()
+    {
+        Metadata.GetMetadata<TItem>();
+    }
+    
+}
